@@ -8,13 +8,17 @@ export enum MessageRole {
 export interface ChatResponse {
   message: string
   offers?: JobOffer
+  text?: string
   messageRole: MessageRole
   createdAt: Date | string
   responseType?: IntentionType
 }
 
 export enum IntentionType {
-  OFFER_SEARCH = 0
+  OFFER_SEARCH = 0,
+  INTRODUCTION = 1,
+  OFFER_DETAIL = 2,
+  OFFER_POSTULATION = 3,
 }
 
 export interface UserIntetion {
@@ -24,7 +28,6 @@ export interface UserIntetion {
 
 export interface ChatMessage {
   messages: ChatResponse[]
-  createdAt: string
-  updatedAt: string
   pushMessage: (message: ChatResponse) => void
+  cleanMessages: () => void
 }
