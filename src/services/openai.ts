@@ -1,5 +1,5 @@
 import { Configuration, OpenAIApi, ChatCompletionRequestMessageRoleEnum } from 'openai'
-import { OPENAI_REQUEST_INTENTION_SCHEMA, OPENAI_RESPONSE_FORMAT, TEST_OPENAI_REQUEST, TEST_OPENAI_RESPONSE } from '@/constants'
+import { OPENAI_REQUEST_INTENTION_SCHEMA, OPENAI_RESPONSE_FORMAT, TEST_OPENAI_REQUEST, TEST_OPENAI_REQUEST2, TEST_OPENAI_REQUEST3, TEST_OPENAI_REQUEST4, TEST_OPENAI_RESPONSE, TEST_OPENAI_RESPONSE2, TEST_OPENAI_RESPONSE3, TEST_OPENAI_RESPONSE4 } from '@/constants'
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY
@@ -31,6 +31,30 @@ export async function getMessageIntention (message: string): Promise<string | nu
       {
         role: ChatCompletionRequestMessageRoleEnum.Assistant,
         content: TEST_OPENAI_RESPONSE
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.User,
+        content: TEST_OPENAI_REQUEST2
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.Assistant,
+        content: TEST_OPENAI_RESPONSE2
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.User,
+        content: TEST_OPENAI_REQUEST3
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.Assistant,
+        content: TEST_OPENAI_RESPONSE3
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.User,
+        content: TEST_OPENAI_REQUEST4
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.Assistant,
+        content: TEST_OPENAI_RESPONSE4
       },
       {
         role: ChatCompletionRequestMessageRoleEnum.User,
