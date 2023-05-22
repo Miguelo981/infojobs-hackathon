@@ -5,10 +5,11 @@ import { useState } from 'react'
 import { create } from 'zustand'
 
 interface useChatMessageResponse {
-  readMessages: () => ChatResponse[]
+  readonly messages: ChatResponse[]
   fetchQuestion: (question: string) => Promise<ChatResponse | undefined>
-  isLoading: boolean
-  error: Error | null
+  cleanMessages: () => void
+  readonly isLoading: boolean
+  readonly error: Error | null
 }
 
 export function useChatMessage (): useChatMessageResponse {
@@ -18,14 +19,16 @@ export function useChatMessage (): useChatMessageResponse {
   const chatMessageStore = create<ChatMessage>()((set) => (
     {
       messages: typeof window !== 'undefined' && window.localStorage.getItem(CHAT_MESSAGES_LS_KEY) != null ? JSON.parse(window.localStorage.getItem(CHAT_MESSAGES_LS_KEY) as string) : [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
       pushMessage: (message: ChatResponse) => {
         if (message == null) return
 
         // message.createdAt = new Date().toISOString()
 
         set(state => ({ messages: [...state.messages, message] }))
+        window.localStorage.setItem(CHAT_MESSAGES_LS_KEY, JSON.stringify(chatMessageStore.getState().messages))
+      },
+      cleanMessages: () => {
+        chatMessageStore.setState({ messages: [] })
         window.localStorage.setItem(CHAT_MESSAGES_LS_KEY, JSON.stringify(chatMessageStore.getState().messages))
       }
     }
@@ -54,10 +57,6 @@ export function useChatMessage (): useChatMessageResponse {
     }
   }
 
-  const readMessages = () => {
-    return chatMessageStore.getState().messages
-  }
-
   const pushUserMessage = (message: string) => {
     chatMessageStore.getState().pushMessage({
       message,
@@ -72,5 +71,9 @@ export function useChatMessage (): useChatMessageResponse {
     chatMessageStore.setState({ messages })
   }
 
-  return { readMessages, fetchQuestion, isLoading, error }
+  const cleanMessages = () => {
+    chatMessageStore.getState().cleanMessages()
+  }
+
+  return { messages: chatMessageStore.getState().messages, fetchQuestion, cleanMessages, isLoading, error }
 }
