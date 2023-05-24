@@ -86,6 +86,12 @@ export default async function handler (
             }
 
             const { id } = (await getDictionaryList('country'))?.find(d => d.value.toLowerCase() === country.toLowerCase()) ?? { id: null }
+            
+            if (id == null) {
+              res.status(500).json({ message: 'Tienes que especificar el pais o provincia' })
+              return
+            }
+            
             const cityList = await getDictionaryList('city', String(id))
 
             if (cityList == null) {
@@ -93,7 +99,9 @@ export default async function handler (
               return
             }
 
-            const validCity = await getCorrectCity(data.body.city, cityList.map(p => p.key).join(','))
+            console.log(cityList)
+
+            const validCity = await getCorrectCity(data.body.city, cityList?.map(p => p.key).join(','))
 
             if (validCity == null) {
               res.status(500).json({ message: 'Internal server error' })
@@ -113,7 +121,7 @@ export default async function handler (
 
           return res.json({ message: 'Success', offers, messageRole: MessageRole.BOT, createdAt: new Date(), responseType: IntentionType.OFFER_SEARCH })
         case IntentionType.INTRODUCTION:
-          return res.json({ message: 'Success', text: data.body as string, messageRole: MessageRole.BOT, createdAt: new Date(), responseType: IntentionType.INTRODUCTION })
+          return res.json({ message: 'Success', text: data.message, messageRole: MessageRole.BOT, createdAt: new Date(), responseType: IntentionType.INTRODUCTION })
       }
 
       break

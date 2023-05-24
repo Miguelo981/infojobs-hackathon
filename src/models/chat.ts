@@ -24,6 +24,7 @@ export enum IntentionType {
 export interface UserIntetion {
   responseType: IntentionType
   body: JobsOfferQuery | null
+  message?: string
 }
 
 export interface ChatMessage {

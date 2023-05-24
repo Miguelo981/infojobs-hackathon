@@ -20,7 +20,7 @@ export async function getMessageIntention (message: string): Promise<string | nu
     const messages = [
       {
         role: ChatCompletionRequestMessageRoleEnum.System,
-        content: `You are an Infojobs's job finder assistant. You will interpretate user messages and return a response type depending of user's intention. 
+        content: `You are an expert intention identifier. You will interpretate user messages and return a response type and body depending of user's intention. 
           ${OPENAI_REQUEST_INTENTION_SCHEMA}
           ${OPENAI_RESPONSE_FORMAT}`
       },
@@ -65,6 +65,8 @@ export async function getMessageIntention (message: string): Promise<string | nu
     const { data } = await openai.createChatCompletion({
       ...openaiConfig,
       messages
+    }, {
+      timeout: 15000
     })
 
     const [choice] = data.choices
@@ -72,7 +74,11 @@ export async function getMessageIntention (message: string): Promise<string | nu
     if (!choice) return null
 
     return choice.message.content
-  } catch (err) {
+  } catch (err: any) {
+    if (err.response?.data?.error?.message === 'Completion request timed out') {
+      console.log('Timeout')
+      return await getMessageIntention(message)
+    }
     console.log(err)
     return null
   }
