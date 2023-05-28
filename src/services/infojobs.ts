@@ -1,5 +1,5 @@
 import { INFOJOBS_API_URL, INFOJOBS_TOKEN } from '@/constants'
-import { JobOffer, JobsOfferQuery } from '@/models/infojobs/offer'
+import { Item, JobOffer, JobsOfferQuery } from '@/models/infojobs/offer'
 import { Dictionary, DictionaryId } from '@/types'
 
 const OFFER_ENDPOINT = '/9/offer'
@@ -9,6 +9,24 @@ export async function getOffers (query?: JobsOfferQuery): Promise<JobOffer | nul
   try {
     const params = new URLSearchParams(query as any)
     const res = await fetch(`${INFOJOBS_API_URL}${OFFER_ENDPOINT}?${params.toString()}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${INFOJOBS_TOKEN}`
+      }
+    })
+    const data = await res.json()
+
+    return data
+  } catch (error) {
+    console.log(error)
+    return null
+  }
+}
+
+export async function getOffer (id: string): Promise<Item | null> {
+  try {
+    const res = await fetch(`${INFOJOBS_API_URL}${OFFER_ENDPOINT}/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

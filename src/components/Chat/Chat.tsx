@@ -12,12 +12,12 @@ import ConfirmationModal from '../Modal/ConfirmationModal'
 
 export default function Chat () {
   const { push } = useRouter()
-  const messagesEndRef = useRef(null)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
   const { messages, fetchQuestion, cleanMessages, isLoading } = useChatMessage()
   const [openModal, setOpenModal] = useState(false)
 
   const handleMessageTyped = (message: string) => {
-    fetchQuestion(message)
+    fetchQuestion(message).catch(console.log)
   }
 
   const scrollToBottom = () => {
@@ -37,7 +37,7 @@ export default function Chat () {
     if (!state) return
 
     cleanMessages()
-    push('/')
+    push('/').catch(console.log)
   }
 
   return (
@@ -49,7 +49,7 @@ export default function Chat () {
         </button>
         <ConfirmationModal visible={openModal} onClose={handleConfirmationClose} title='Borrar chat' description='¿Estás seguro de que quieres borrar el chat?' />
       </header>
-      <section className='overflow-y-auto h-[50vh] rounded p-5 bg-[#f4f4f4]'>
+      <section className='overflow-y-auto h-[60vh] rounded p-5 bg-[#f4f4f4]'>
         <MessageList messages={messages} />
         <Loader visible={isLoading} />
         <div ref={messagesEndRef} />

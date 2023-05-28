@@ -1,5 +1,6 @@
 import { ChatResponse, IntentionType } from '@/models/chat'
 import MinimumOfferDetail from './MinimumOfferDetail'
+import DetailedOfferDetail from './DetailedOfferDetail'
 
 interface BotMessageBodyProps {
   message: ChatResponse
@@ -29,7 +30,19 @@ export default function BotMessageBody ({ message }: BotMessageBodyProps) {
               <p>{message.text}</p>
             </div>
             )
-          : null
+          : message.responseType === IntentionType.OFFER_DETAIL
+            ? (
+              <div className='flex flex-col gap-3'>
+                {
+              message.offers?.items?.map((item, index: number) => (
+                <div key={item.id} className='px-4 py-2 bg-secondary text-primary w-fit rounded-r-lg rounded-tl-lg'>
+                  <DetailedOfferDetail item={item} index={index + 1} />
+                </div>
+              ))
+            }
+              </div>
+              )
+            : null
       }
     </div>
   )

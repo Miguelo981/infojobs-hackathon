@@ -1,5 +1,5 @@
 import { Configuration, OpenAIApi, ChatCompletionRequestMessageRoleEnum } from 'openai'
-import { OPENAI_REQUEST_INTENTION_SCHEMA, OPENAI_RESPONSE_FORMAT, TEST_OPENAI_REQUEST, TEST_OPENAI_REQUEST2, TEST_OPENAI_REQUEST3, TEST_OPENAI_REQUEST4, TEST_OPENAI_RESPONSE, TEST_OPENAI_RESPONSE2, TEST_OPENAI_RESPONSE3, TEST_OPENAI_RESPONSE4 } from '@/constants'
+import { OPENAI_REQUEST_INTENTION_SCHEMA, OPENAI_RESPONSE_FORMAT, TEST_OPENAI_REQUEST, TEST_OPENAI_REQUEST2, TEST_OPENAI_REQUEST3, TEST_OPENAI_REQUEST4, TEST_OPENAI_REQUEST5, TEST_OPENAI_RESPONSE, TEST_OPENAI_RESPONSE2, TEST_OPENAI_RESPONSE3, TEST_OPENAI_RESPONSE4, TEST_OPENAI_RESPONSE5 } from '@/constants'
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY
@@ -58,6 +58,14 @@ export async function getMessageIntention (message: string): Promise<string | nu
       },
       {
         role: ChatCompletionRequestMessageRoleEnum.User,
+        content: TEST_OPENAI_REQUEST5
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.Assistant,
+        content: TEST_OPENAI_RESPONSE5
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.User,
         content: message
       }
     ]
@@ -66,16 +74,17 @@ export async function getMessageIntention (message: string): Promise<string | nu
       ...openaiConfig,
       messages
     }, {
-      timeout: 15000
+      timeout: 30000
     })
 
     const [choice] = data.choices
 
-    if (!choice) return null
+    if (choice == null) return null
 
-    return choice.message.content
+    return choice.message?.content ?? null
   } catch (err: any) {
-    if (err.response?.data?.error?.message === 'Completion request timed out') {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    if (!err.response) {
       console.log('Timeout')
       return await getMessageIntention(message)
     }
@@ -120,9 +129,9 @@ export async function getCountryName (placeName: string): Promise<string | null>
 
     const [choice] = data.choices
 
-    if (!choice) return null
+    if (choice == null) return null
 
-    return choice.message.content
+    return choice.message?.content ?? null
   } catch (err) {
     console.log(err)
     return null
@@ -173,9 +182,9 @@ export async function getCorrectProvince (province: string, provinceList: string
 
     const [choice] = data.choices
 
-    if (!choice) return null
+    if (choice == null) return null
 
-    return choice.message.content
+    return choice.message?.content ?? null
   } catch (err) {
     console.log(err)
     return null
@@ -226,9 +235,9 @@ export async function getCorrectCity (city: string, cityList: string): Promise<s
 
     const [choice] = data.choices
 
-    if (!choice) return null
+    if (choice == null) return null
 
-    return choice.message.content
+    return choice.message?.content ?? null
   } catch (err) {
     console.log(err)
     return null

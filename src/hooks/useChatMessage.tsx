@@ -1,5 +1,5 @@
 import { CHAT_MESSAGES_LS_KEY } from '@/constants'
-import { ChatMessage, ChatResponse, MessageRole } from '@/models/chat'
+import { ChatMessage, ChatResponse, IntentionType, MessageRole } from '@/models/chat'
 import { askChatBot } from '@/services/chat'
 import { useState } from 'react'
 import { create } from 'zustand'
@@ -37,16 +37,52 @@ export function useChatMessage (): useChatMessageResponse {
   const fetchQuestion = async (question: string): Promise<ChatResponse | undefined> => {
     try {
       setIsLoading(true)
+
+      const lastMessage = chatMessageStore.getState().messages[chatMessageStore.getState().messages.length - 1]
+
       pushUserMessage(question)
 
+      if (lastMessage.responseType === IntentionType.OFFER_SEARCH) {
+        question = `${question}. Job-list:${JSON.stringify(lastMessage.offers?.items.map((i, index) => { return { index: index + 1, id: i.id } }))}`
+      }
+
       const response = await askChatBot(question)
+
+      console.log(response)
 
       if (response == null) {
         // TODO handle error
         return
       }
 
-      chatMessageStore.getState().pushMessage(response)
+      switch (response.responseType) {
+        case IntentionType.OFFER_SEARCH:
+        case IntentionType.INTRODUCTION:
+        case IntentionType.OFFER_DETAIL:
+          chatMessageStore.getState().pushMessage(response)
+          break
+       /*  case IntentionType.OFFER_DETAIL:
+          const { offerIds } = response
+
+          if (offerIds == null) {
+            // TODO handle error
+            return
+          }
+
+          const msg: ChatResponse = {
+            message: '¡Genial! Te muestro la oferta que me has pedido',
+            offers: {
+              items: offers
+            } as JobOffer,
+            messageRole: MessageRole.BOT,
+            responseType: IntentionType.OFFER_DETAIL,
+            createdAt: response.createdAt
+          }
+
+          chatMessageStore.getState().pushMessage(msg)
+
+          break
+ */ }
 
       return response
     } catch (err: any) {
