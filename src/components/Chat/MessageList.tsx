@@ -6,12 +6,12 @@ interface MessageListProps {
 
 export default function MessageList ({ messages }: MessageListProps) {
   return (
-    <section className='w-full flex flex-col gap-3 overflow-y-auto h-[50vh]'>
+    <div className='w-full flex flex-col gap-3'>
       {
         messages.map((message, index) => (
           <MessageDetail key={index} message={message} />
         ))
       }
-    </section>
+    </div>
   )
 }

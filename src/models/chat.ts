@@ -2,29 +2,35 @@ import { JobOffer, JobsOfferQuery } from './infojobs/offer'
 
 export enum MessageRole {
   USER = 0,
-  BOT = 1
+  BOT = 1,
+  ERROR = 2,
 }
 
 export interface ChatResponse {
   message: string
   offers?: JobOffer
+  text?: string
+  offerIds?: string[]
   messageRole: MessageRole
   createdAt: Date | string
   responseType?: IntentionType
 }
 
 export enum IntentionType {
-  OFFER_SEARCH = 0
+  OFFER_SEARCH = 0,
+  INTRODUCTION = 1,
+  OFFER_DETAIL = 2,
+  OFFER_POSTULATION = 3,
 }
 
 export interface UserIntetion {
   responseType: IntentionType
   body: JobsOfferQuery | null
+  message?: string
 }
 
 export interface ChatMessage {
   messages: ChatResponse[]
-  createdAt: string
-  updatedAt: string
   pushMessage: (message: ChatResponse) => void
+  cleanMessages: () => void
 }

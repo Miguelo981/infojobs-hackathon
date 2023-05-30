@@ -1,5 +1,5 @@
 import { Configuration, OpenAIApi, ChatCompletionRequestMessageRoleEnum } from 'openai'
-import { OPENAI_REQUEST_INTENTION_SCHEMA, OPENAI_RESPONSE_FORMAT, TEST_OPENAI_REQUEST, TEST_OPENAI_RESPONSE } from '@/constants'
+import { OPENAI_REQUEST_INTENTION_SCHEMA, OPENAI_RESPONSE_FORMAT, TEST_OPENAI_REQUEST, TEST_OPENAI_REQUEST2, TEST_OPENAI_REQUEST3, TEST_OPENAI_REQUEST4, TEST_OPENAI_REQUEST5, TEST_OPENAI_REQUEST6, TEST_OPENAI_REQUEST7, TEST_OPENAI_RESPONSE, TEST_OPENAI_RESPONSE2, TEST_OPENAI_RESPONSE3, TEST_OPENAI_RESPONSE4, TEST_OPENAI_RESPONSE5, TEST_OPENAI_RESPONSE6, TEST_OPENAI_RESPONSE7 } from '@/constants'
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY
@@ -20,7 +20,7 @@ export async function getMessageIntention (message: string): Promise<string | nu
     const messages = [
       {
         role: ChatCompletionRequestMessageRoleEnum.System,
-        content: `You are an Infojobs's job finder assistant. You will interpretate user messages and return a response type depending of user's intention. 
+        content: `You are an expert intention identifier. You will interpretate user messages and return a response type and body depending of user's intention. 
           ${OPENAI_REQUEST_INTENTION_SCHEMA}
           ${OPENAI_RESPONSE_FORMAT}`
       },
@@ -34,6 +34,54 @@ export async function getMessageIntention (message: string): Promise<string | nu
       },
       {
         role: ChatCompletionRequestMessageRoleEnum.User,
+        content: TEST_OPENAI_REQUEST2
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.Assistant,
+        content: TEST_OPENAI_RESPONSE2
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.User,
+        content: TEST_OPENAI_REQUEST3
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.Assistant,
+        content: TEST_OPENAI_RESPONSE3
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.User,
+        content: TEST_OPENAI_REQUEST4
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.Assistant,
+        content: TEST_OPENAI_RESPONSE4
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.User,
+        content: TEST_OPENAI_REQUEST5
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.Assistant,
+        content: TEST_OPENAI_RESPONSE5
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.User,
+        content: TEST_OPENAI_REQUEST6 
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.Assistant,
+        content: TEST_OPENAI_RESPONSE6
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.User,
+        content: TEST_OPENAI_REQUEST7
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.Assistant,
+        content: TEST_OPENAI_RESPONSE7
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.User,
         content: message
       }
     ]
@@ -41,14 +89,21 @@ export async function getMessageIntention (message: string): Promise<string | nu
     const { data } = await openai.createChatCompletion({
       ...openaiConfig,
       messages
+    }, {
+      timeout: 30000
     })
 
     const [choice] = data.choices
 
-    if (!choice) return null
+    if (choice == null) return null
 
-    return choice.message.content
-  } catch (err) {
+    return choice.message?.content ?? null
+  } catch (err: any) {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    if (!err.response) {
+      console.log('Timeout')
+      return await getMessageIntention(message)
+    }
     console.log(err)
     return null
   }
@@ -90,9 +145,9 @@ export async function getCountryName (placeName: string): Promise<string | null>
 
     const [choice] = data.choices
 
-    if (!choice) return null
+    if (choice == null) return null
 
-    return choice.message.content
+    return choice.message?.content ?? null
   } catch (err) {
     console.log(err)
     return null
@@ -143,9 +198,9 @@ export async function getCorrectProvince (province: string, provinceList: string
 
     const [choice] = data.choices
 
-    if (!choice) return null
+    if (choice == null) return null
 
-    return choice.message.content
+    return choice.message?.content ?? null
   } catch (err) {
     console.log(err)
     return null
@@ -196,9 +251,9 @@ export async function getCorrectCity (city: string, cityList: string): Promise<s
 
     const [choice] = data.choices
 
-    if (!choice) return null
+    if (choice == null) return null
 
-    return choice.message.content
+    return choice.message?.content ?? null
   } catch (err) {
     console.log(err)
     return null

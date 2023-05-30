@@ -42,6 +42,7 @@ export interface Item {
   province: Category
   city: string
   link: string
+  description: string
   category: Category
   contractType: Category
   subcategory: Category
@@ -64,6 +65,7 @@ export interface Item {
   multiProvince: boolean
   urgent: boolean
   color: boolean
+  profile?: any
 }
 
 export interface Author {

@@ -12,13 +12,15 @@ export default function MessageDetail ({ message }: MessageDetailProps) {
       {
         message.messageRole === MessageRole.BOT
           ? <BotMessageBody message={message} />
-          : <div className='px-4 py-2 bg-blue-600 text-white w-fit rounded-l-lg rounded-tr-lg'>
-            {message.message}
-          </div>
+          : (
+            <div className='px-4 py-2 bg-primary text-white w-fit rounded-l-lg rounded-tr-lg'>
+              <span>{message.message}</span>
+            </div>
+            )
       }
       <div className={message.messageRole === MessageRole.BOT ? '' : 'text-end'}>
         <time>
-          <span className='text-xs'>{timeAgo(new Date(message.createdAt))}</span>
+          <span className='text-xs text-[#2D3133]'>{timeAgo(new Date(message.createdAt))}</span>
         </time>
       </div>
     </div>

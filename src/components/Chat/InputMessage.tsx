@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, useState } from 'react'
+import { ChangeEvent, KeyboardEvent, MouseEvent, useState } from 'react'
 
 interface InputMessageProps {
   onMessageEntered: (message: string) => void
@@ -7,14 +7,22 @@ interface InputMessageProps {
 export default function InputMessage ({ onMessageEntered }: InputMessageProps) {
   const [message, setMessage] = useState('')
 
-  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
 
     setMessage(value)
   }
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key !== 'Enter') return
+
+    handleSend(event)
+  }
+
+  const handleSend = (event: MouseEvent<HTMLButtonElement> | KeyboardEvent) => {
+    event.preventDefault()
+
+    if (message.length < 3) return
 
     onMessageEntered(message)
 
@@ -22,6 +30,18 @@ export default function InputMessage ({ onMessageEntered }: InputMessageProps) {
   }
 
   return (
-    <textarea className='text-black w-full min-h-[50px] rounded-lg mt-6 p-2 focus:outline-none' onChange={handleChange} onKeyDown={handleKeyDown} value={message} />
+    <>
+      <input
+        type='text'
+        id='input-chat'
+        name='input-chat'
+        placeholder='Escribe tu pregunta...'
+        className='text-black w-full h-auto rounded-lg p-2 focus:outline-none'
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        value={message}
+      />
+      <button type='button' onClick={handleSend} className='primary-btn'>Enviar</button>
+    </>
   )
 }
