@@ -9,7 +9,7 @@ export default function Home () {
       className='flex min-h-screen flex-col items-center justify-between p-24 bg-white'
     >
       <Chat />
-      <p style="margin-top: 25px;color: black;">Ejemplo de busqueda: Devuelveme 5 ofertas de programador en malaga cobrando 1200€</p>
+      <p style={{marginTop: '25px', color: 'black' }}>Ejemplo de busqueda: Devuelveme 5 ofertas de programador en malaga cobrando 1200€</p>
     </main>
 
   )
