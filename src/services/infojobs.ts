@@ -24,7 +24,7 @@ export async function getOffers (query?: JobsOfferQuery): Promise<JobOffer | nul
   }
 }
 
-export async function getOffer (id: string): Promise<Item | null> {
+export async function findOffer (id: string): Promise<Item | null> {
   try {
     const res = await fetch(`${INFOJOBS_API_URL}${OFFER_ENDPOINT}/${id}`, {
       method: 'GET',

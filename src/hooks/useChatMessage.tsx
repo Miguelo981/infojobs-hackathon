@@ -42,7 +42,7 @@ export function useChatMessage (): useChatMessageResponse {
 
       pushUserMessage(question)
 
-      if (lastMessage.responseType === IntentionType.OFFER_SEARCH) {
+      if (lastMessage?.responseType === IntentionType.OFFER_SEARCH) {
         question = `${question}. Job-list:${JSON.stringify(lastMessage.offers?.items.map((i, index) => { return { index: index + 1, id: i.id } }))}`
       }
 

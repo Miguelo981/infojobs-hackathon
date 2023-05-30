@@ -1,8 +1,10 @@
 /* eslint-disable no-case-declarations */
 import { ChatResponse, IntentionType, MessageRole, UserIntetion } from '@/models/chat'
-import { checkIfValidCity, checkIfValidCountry, checkIfValidProvince, getDictionaryList, getOffer, getOffers } from '@/services/infojobs'
+import { checkIfValidCity, checkIfValidCountry, checkIfValidProvince, getDictionaryList, getOffers, findOffer } from '@/services/infojobs'
 import { getCorrectCity, getCorrectProvince, getCountryName, getMessageIntention } from '@/services/openai'
 import { NextApiRequest, NextApiResponse } from 'next'
+import JSONExtract from 'extract-json-from-string';
+
 
 export default async function handler (
   req: NextApiRequest,
@@ -27,7 +29,12 @@ export default async function handler (
 
       console.log(intention)
 
-      const data: UserIntetion = JSON.parse(intention)
+      //const extract = require('extract-json-from-string');
+      const [data] = JSONExtract(intention) as  UserIntetion[]
+
+      console.log(data)
+
+      //const data: UserIntetion = JSON.parse(parsedIntention)
 
       if (data.body == null) {
         res.status(500).json({ message: 'Internal server error', messageRole: MessageRole.ERROR, createdAt: new Date() })
@@ -124,10 +131,11 @@ export default async function handler (
           return res.json({ message: 'Success', text: data.message, messageRole: MessageRole.BOT, createdAt: new Date(), responseType: IntentionType.INTRODUCTION })
         case IntentionType.OFFER_DETAIL:
           const responseBody = { message: 'Success', offers: { items: [] } as any, text: data.message, messageRole: MessageRole.BOT, createdAt: new Date(), responseType: IntentionType.OFFER_DETAIL }
+          
           for (const offerId of (data.body as any).offerIds) {
             if (typeof offerId !== 'string') continue
 
-            const offer = await getOffer(offerId)
+            const offer = await findOffer(offerId)
 
             if (offer == null) continue
 

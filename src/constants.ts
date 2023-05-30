@@ -39,7 +39,7 @@ export const TEST_OPENAI_RESPONSE = `
     "body": {
       "salaryMin": 1000,
       "contry": "espana",
-      "q": "programador web",
+      "q": "programador web"
     },
     "message": null
   }
@@ -81,6 +81,32 @@ export const TEST_OPENAI_RESPONSE5 = `
     "body": {
       "offerIds": [
         "0baef5dc154270ad1bdb379f542512",
+        "0234dsff5dc154270ad1bdbgv43rwer542512"
+      ]
+    },
+    "message": null
+  }
+`
+export const TEST_OPENAI_REQUEST6 = 'dame mas informacion oferta 1 y 3. Job-list:[{ index: 1, offerId: "0baef5dc154270ad1bdb379f542512" }, { index: 2, offerId: "0baef5dc154270ad1bdb435wfwer4" }, { index: 3, offerId: "0234dsff5dc154270ad1bdbgv43rwer542512" }]'
+export const TEST_OPENAI_RESPONSE6 = `
+  {
+    "responseType": 2,
+    "body": {
+      "offerIds": [
+        "0baef5dc154270ad1bdb379f542512",
+        "0234dsff5dc154270ad1bdbgv43rwer542512"
+      ]
+    },
+    "message": null
+  }
+`
+export const TEST_OPENAI_REQUEST7 = 'dame mas info de la segunda y tercer oferta. Job-list:[{ index: 1, offerId: "0baef5dc154270ad1bdb379f542512" }, { index: 2, offerId: "0baef5dc154270ad1bdb435wfwer4" }, { index: 3, offerId: "0234dsff5dc154270ad1bdbgv43rwer542512" }]'
+export const TEST_OPENAI_RESPONSE7 = `
+  {
+    "responseType": 2,
+    "body": {
+      "offerIds": [
+        "0baef5dc154270ad1bdb435wfwer4",
         "0234dsff5dc154270ad1bdbgv43rwer542512"
       ]
     },
