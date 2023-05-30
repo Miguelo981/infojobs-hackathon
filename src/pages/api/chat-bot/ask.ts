@@ -3,6 +3,7 @@ import { ChatResponse, IntentionType, MessageRole, UserIntetion } from '@/models
 import { checkIfValidCity, checkIfValidCountry, checkIfValidProvince, getDictionaryList, getOffers, findOffer } from '@/services/infojobs'
 import { getCorrectCity, getCorrectProvince, getCountryName, getMessageIntention } from '@/services/openai'
 import { NextApiRequest, NextApiResponse } from 'next'
+// @ts-ignore
 import JSONExtract from 'extract-json-from-string';
 
 

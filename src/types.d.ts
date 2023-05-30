@@ -7,3 +7,7 @@ export interface Dictionary {
   key: string
   parent: number
 }
+
+declare module 'extract-json-from-string' {
+  export default function JSONExtract (str: string): string
+}
